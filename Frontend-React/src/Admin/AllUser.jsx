@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingPage from '../Share/Loading ';
 import Error from '../Share/Error';
+import URL from '../ConnectDataBase';
 
 const AllUser = () => {
   
@@ -12,7 +13,7 @@ const AllUser = () => {
   const navigator = useNavigate() ; 
 
   useEffect(()=> { 
-    axios.get('http://localhost:3001/AllUser').then((userr)=>{
+    axios.get(`${URL}/AllUser`).then((userr)=>{
       setAllUsers(userr.data.reverse()); 
       console.log ( "All userr.data.reverse()= " , userr.data.reverse()) ; 
       setLoding(false ); 
@@ -36,14 +37,14 @@ const AllUser = () => {
     };
 
   const handleDelete = (id) => {
-      axios.delete('http://localhost:3001/Admin/deleteAllPost',  { data: {id} })
+      axios.delete(`${URL}/Admin/deleteAllPost`,  { data: {id} })
         .then(() => {
         })
         .catch((error) => {
           console.error('Error adding post:', error);
         });
         
-        axios.delete('http://localhost:3001/Admin/deleteUser',  { data: {id} })
+        axios.delete(`${URL}/Admin/deleteUser`,  { data: {id} })
         .then(() => {
         })
         .catch((error) => {

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoadingPage from '../Share/Loading ';
 import Error from '../Share/Error';
+import URL from '../ConnectDataBase';
 
 function EditePeronPage() {
   const navigate = useNavigate();
@@ -35,10 +36,9 @@ function EditePeronPage() {
     setLoading(true);
     setError(null);
     try {
-      await axios.put(`http://localhost:3001/Admin/EditeUser/${user._id}`, {userData});
+      await axios.put(`${URL}/Admin/EditeUser/${user._id}`, {userData});
       navigate('/PersonPage' ,{state:userData} );
     } catch (err) {
-      console.log ( "Erroro rro oror " ) ;
       setError('حدث خطأ أثناء التحديث. حاول مرة أخرى.');
     } finally {
       setLoading(false);

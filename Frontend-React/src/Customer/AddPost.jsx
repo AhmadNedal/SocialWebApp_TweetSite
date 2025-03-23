@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginPage from '../Share/LoginPage';
+import URL from '../ConnectDataBase';
 
 function AddPost() {
   const [header, setHeader] = useState("");
@@ -15,13 +16,12 @@ function AddPost() {
 
 
   const addPost = (postData) => {
-    axios
-      .post('http://localhost:3001/Add', postData)
+    axios 
+      .post(`${URL}/Add`, postData)
       .then((response) => {
         navigator("/");
       })
       .catch((error) => {
-        console.error('Error adding post:', error);
       });
   };
 
@@ -32,6 +32,7 @@ function AddPost() {
       title: title,
       nameOwner: JSON.parse(localStorage.getItem("UserLogin")).name,
       owner: JSON.parse(localStorage.getItem("UserLogin"))._id,
+      // Like :"" ,
     };
     addPost(Object);
   };

@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Error from '../Share/Error';
 import LoginPage from '../Share/LoginPage';
 import axios from 'axios';
+import ChatLoading from '../Share/ChatLoading';
+import URL from '../ConnectDataBase';
 
 function PersonPage() {
   const location = useLocation();
@@ -10,11 +12,10 @@ function PersonPage() {
   const user =location.state;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
     
 
   useEffect(() => {
-    axios.get('http://localhost:3001/showAll') 
+    axios.get(`${URL}/showAll`) 
       .then(response => {
         let arr = response.data.filter((e)=> {
           if (info.id == e.owner ){
@@ -26,7 +27,6 @@ function PersonPage() {
         setLoading(false);
       })
       .catch(err => {
-        setError(true); 
         setLoading(false); 
       });
   }, []); 
@@ -35,19 +35,15 @@ function PersonPage() {
 
 
     const deletePost = (postData) => {
-      axios.delete('http://localhost:3001/delete',  { data: postData })
+      axios.delete(`${URL}/delete`,  { data: postData })
         .then((response) => {
-          console.log('Post added:', response.data);
         })
         .catch((error) => {
-          setError(true); 
-          console.error('Error adding post:', error);
         });
     };
 
-
-    if (error ) {
-      return (<h1>Erorrr </h1>)
+    if (loading){
+      return (<ChatLoading/>);
     }
 
 

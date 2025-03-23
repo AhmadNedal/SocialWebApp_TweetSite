@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChatLoading from './ChatLoading';
+import URL from '../ConnectDataBase';
 
 function SignUp() {
   const navigate = useNavigate();
 
   const [hint , setHint] =useState(""); 
-
+  const [Loading ,setLoading ]= useState(false);
 
   const [userData, setUserData] = useState({
     name: '',
@@ -22,24 +24,32 @@ function SignUp() {
   };
 
   const addUser = (postData) => {
+    setLoading(true);
 
     if (userData.password.trim().length<7){
-      setHint("كلمة السر يجب ان تكون اكثر من 8 احرف")
-
+      setHint("كلمة السر يجب ان تكون اكثر من 8 احرف"); 
     }else {
+      
     axios
-      .post('http://localhost:3001/AddUser', postData)
+      .post(`${URL}/AddUser`, postData)
       .then((response) => {
         console.log('User added:', response.data);
         navigate("/LoginPage");
       })
       .catch((error) => {
         console.error('Error adding user:', error);
-        setHint("حدث خطأ الرجاء التأكد من المعلومات المُدخلة")
+        setHint("حدث خطأ الرجاء التأكد من المعلومات المُدخلة") ; 
+        setLoading(false);
       });
 
     }
+
   };
+
+
+  // if ( Loading) {
+  //   return ( <ChatLoading/>);
+  // }
 
   return (
     <div className="bg-gradient-to-r from-indigo-500 to-blue-500 h-screen flex justify-center items-center">
@@ -89,9 +99,10 @@ function SignUp() {
          <p className="font-medium text-xs m-10 text-red-500">{hint}</p>
         <button
           type="submit"
-          className="bg-indigo-500 text-white p-3 rounded-lg font-semibold hover:bg-indigo-600 focus:outline-none"
+          disabled={Loading}
+          className={` ${Loading? "opacity-50" :"opacity-100"} bg-indigo-500 text-white p-3 rounded-lg font-semibold hover:bg-indigo-600 focus:outline-none`}
         >
-          Register
+         {Loading ? "جاري التحميل لانشاء حساب" : "Register"}  
         </button>
 
         <p onClick={()=> {

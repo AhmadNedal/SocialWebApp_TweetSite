@@ -1,7 +1,7 @@
 import './App.css';
 import ShowAllPosts from './Customer/ShowAllPost';
 import AddPost from './Customer/AddPost';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import EditePost from './Customer/EditePost';
 import PersonPage from './Customers/PersonPage';
 import LoginPage from './Share/LoginPage';
@@ -18,12 +18,10 @@ function App() {
   
     const [Logding, setLoding ] = useState(true); 
     const [error, setError ] = useState(false); 
-  
   useEffect(()=>{
-
     if ( JSON.parse(localStorage.getItem("UserLogin"))!=null ) {
       const id =JSON.parse(localStorage.getItem("UserLogin"))._id; 
-      axios.get('http://localhost:3001/getUser' , 
+      axios.get('https://backend-c99g.onrender.com/getUser' , 
         {params: { id }}
       ).then((userr)=>{
         localStorage.setItem("UserLogin",JSON.stringify(userr.data.user)) ; 
@@ -32,13 +30,12 @@ function App() {
         setError(true) ;
         setLoding(false ); 
       })
-  
     }else {
       setLoding(false ); 
-
     }
-  
   },[])
+
+  
 
 
   if ( Logding ) {
@@ -48,6 +45,8 @@ function App() {
     return <LoadingPage/>
   }
 
+
+  
   
   return (
 <>
@@ -55,8 +54,8 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-
-        <Route path="/"  element={JSON.parse(localStorage.getItem("UserLogin"))==null ?  <LoginPage/> : <ShowAllPosts/>} />
+        <Route path="/"  element={<ShowAllPosts/>} />
+        <Route path="/Home"  element={<ShowAllPosts/>} />
         <Route path="/AddPost"  element={<AddPost/>} />
         <Route path="/EditePost"  element={<EditePost/>} />
         <Route path="/PersonPage"  element={<PersonPage/>} />

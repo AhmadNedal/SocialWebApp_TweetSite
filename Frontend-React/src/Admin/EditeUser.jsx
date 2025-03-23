@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoadingPage from '../Share/Loading ';
 import Error from '../Share/Error';
+import URL from '../ConnectDataBase';
 
 function EditeUser() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ function EditeUser() {
   
 
     try {
-      await axios.put(`http://localhost:3001/Admin/EditeUser/${user._id}`, {userData});
+      await axios.put(`${URL}/Admin/EditeUser/${user._id}`, {userData});
       navigate('/AllUser');
     } catch (err) {
       console.log ( "Erroro rro oror " ) ;

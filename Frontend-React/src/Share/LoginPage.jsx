@@ -1,12 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import LoadingPage from './Loading ';
+import URL from '../ConnectDataBase';
 
 function LoginPage() {
 
   const[pass, setPass] = useState(""); 
   const[email, setEmail] = useState("");
   const [hint , setHint ] = useState("") ;
+  const [Loading , setLoading ] = useState("") ;
   const navigate = useNavigate() ; 
 
   const info = { 
@@ -14,24 +17,40 @@ function LoginPage() {
     password :pass 
   }
 
+  
+
   const HandelLogin =async (e)=>{
-    
+    setLoading(true); 
     if ( email.trim()!="" &&pass.trim()!="" && email.indexOf('@')!=-1) {
-      axios.post('http://localhost:3001/Login', {...info}).then((res)=>{
-      setHint("تم تسجيل الدخول بنجاح "); 
-      localStorage.setItem("UserLogin",JSON.stringify(res.data.user))
-      console.log ( "res.data = " ,res.data.user);
-      navigate('/personPage' , {state:res.data.user});
+      
+      axios.post(`${URL}/Login`, {...info}).then((res)=>{
+        localStorage.setItem("UserLogin",JSON.stringify(res.data.user));
+        localStorage.setItem("from" , "true") ;
+        setHint("تم تسجيل الدخول بنجاح "); 
+      setLoading(false); 
+      navigate('/');
 
     }).catch((err)=>{
         setHint("الايميل او كلمة المرو خطأ")
+      setLoading(false); 
     })
   }else {
-      setHint("الرجاء تعبة الحقول بشكل صحيح")
+      setHint("الرجاء تعبة الحقول بشكل صحيح") ;
+      setLoading(false); 
   }
 
   }
 
+
+  if ( Loading ) {
+    return <LoadingPage/>
+  }
+
+
+  if ( localStorage.getItem("from") == "true"){
+    
+    navigate("/"); 
+  }
 
   return (
     <div className="bg-gradient-to-r from-indigo-500 to-blue-500 h-screen flex justify-center items-center">
@@ -67,9 +86,10 @@ function LoginPage() {
         type="submit"
         className="bg-indigo-500 text-white p-3 rounded-lg font-semibold hover:bg-indigo-600 focus:outline-none"
         
-        onClick={(e) => {
+        onClick={async (e) => {
           e.preventDefault();
           HandelLogin();
+        
         }}
 
         >

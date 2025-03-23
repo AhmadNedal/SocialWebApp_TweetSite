@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoginPage from '../Share/LoginPage';
+import URL from '../ConnectDataBase';
 
 function EditPost() {
   const location = useLocation();
@@ -26,7 +27,8 @@ function EditPost() {
 
   
   const ShowUser = (e)=>{
-    axios.get(`http://localhost:3001/ShowUser/${e}`) 
+    setLoading(true);
+    axios.get(`${URL}/ShowUser/${e}`) 
       .then(res => {
         navigate("/PersonPage" , {state:res.data}) ; 
         setLoading(false);
@@ -51,11 +53,10 @@ function EditPost() {
     };
 
     try {
-      await axios.put(`http://localhost:3001/EditeP/${post._id}`, {updatePost});
-        console.log ( "Editeddd" ) ; 
-      navigate('/');
+      await axios.put(`${URL}/EditeP/${post._id}`, {updatePost});
+        navigate('/');
+        setLoading(false);
     } catch (err) {
-      console.log ( "Erroro rro oror " ) ;
       setError('حدث خطأ أثناء التحديث. حاول مرة أخرى.');
     } finally {
       setLoading(false);
@@ -121,6 +122,7 @@ function EditPost() {
           />
           <textarea 
             disabled={!EditeOrShow}
+            style={{minHeight:"150px"}}
             className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="المحتوى" 
             value={title} 
@@ -131,7 +133,6 @@ function EditPost() {
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded transition duration-300"
               onClick={(e)=> {
                 e.preventDefault() ; 
-                console.log ( "editoRShow  = " , EditeOrShow )
                   if ( EditeOrShow) { 
                     handleEditPost();
                   }else {
